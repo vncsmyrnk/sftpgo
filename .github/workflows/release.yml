@@ -1,8 +1,9 @@
 name: Release
 
-on:
-  push:
-    tags: 'v*'
+# DISABLED: Uncomment the section below to re-enable this workflow
+# on:
+#   push:
+#     tags: 'v*'
 
 permissions:
   id-token: write

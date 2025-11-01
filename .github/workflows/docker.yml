@@ -1,14 +1,15 @@
 name: Docker
 
-on:
-  #schedule:
-  #  - cron: '0 4 * * *' # everyday at 4:00 AM UTC
-  push:
-    branches:
-      - main
-    tags:
-      - v*
-  pull_request:
+# DISABLED: Uncomment the section below to re-enable this workflow
+# on:
+#   #schedule:
+#   #  - cron: '0 4 * * *' # everyday at 4:00 AM UTC
+#   push:
+#     branches:
+#       - main
+#     tags:
+#       - v*
+#   pull_request:
 
 jobs:
   build:

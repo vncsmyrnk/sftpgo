@@ -1,10 +1,11 @@
 name: "Code scanning - action"
 
-on:
-  push:
-  pull_request:
-  schedule:
-    - cron: '30 1 * * 6'
+# DISABLED: Uncomment the section below to re-enable this workflow
+# on:
+#   push:
+#   pull_request:
+#   schedule:
+#     - cron: '30 1 * * 6'
 
 jobs:
   CodeQL-Build:

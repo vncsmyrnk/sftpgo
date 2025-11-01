@@ -1,9 +1,10 @@
 name: CI
 
-on:
-  push:
-    branches: [main]
-  pull_request:
+# DISABLED: Uncomment the section below to re-enable this workflow
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
 
 permissions:
   id-token: write
