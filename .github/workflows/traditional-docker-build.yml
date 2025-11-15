@@ -1,0 +1,59 @@
+name: Builds sftpgo Docker image via the traditional method
+
+on:
+  push:
+    branches: [ "stable" ]
+
+permissions:
+  packages: write
+
+jobs:
+  build:
+    name: Builds Docker image via nix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Installs Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build the image
+        run: docker build -t sftpgo-traditional:latest .
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to Container registry
+        run: |
+          docker tag sftpgo-traditional:latest ghcr.io/${{ github.repository_owner }}/sftpgo-traditional:latest
+          docker push --all-tags ghcr.io/${{ github.repository_owner }}/sftpgo-traditional
+
+  dependency-scan:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generates SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: ghcr.io/${{ github.repository_owner }}/sftpgo-traditional:latest
+          format: spdx-json
+          output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
+
+      - name: Scan SBOM
+        id: scan
+        uses: anchore/scan-action@v6
+        with:
+          sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
+          output-format: json
+          fail-build: false
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: output-scan-json
+          path: ${{ steps.scan.outputs.json }}
